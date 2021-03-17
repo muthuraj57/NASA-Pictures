@@ -5,4 +5,14 @@
     <dimen name="vertical_margin">16dp</dimen>
     <dimen name="vertical_content_margin">8dp</dimen>
     <dimen name="published_date_and_copyright_horizontal_gap">8dp</dimen>
+
+    <dimen name="horizontal_image_height">40dp</dimen>
+    <dimen name="horizontal_current_image_height">70dp</dimen>
+    <!-- This value is half of the difference between above two values. -->
+    <dimen name="horizontal_image_list_vertical_margin">16dp</dimen>
+
+    <dimen name="horizontal_image_list_gap">8dp</dimen>
+
+    <dimen name="viewpager_next_item_visible">20dp</dimen>
+    <dimen name="viewpager_current_item_horizontal_margin">28dp</dimen>
 </resources><!-- $Id$ -->

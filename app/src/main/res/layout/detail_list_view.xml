@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.nasa.pictures.demo.ui.grid.detail.DetailViewModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/detailViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/vertical_margin">
+
+        <include
+            android:id="@+id/detailView"
+            layout="@layout/detail_view"
+            viewModel="@{viewModel}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.cardview.widget.CardView>
+</layout><!-- $Id$ -->

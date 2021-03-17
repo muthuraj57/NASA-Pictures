@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.nasa.pictures.demo.ui.grid.detail.DetailViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView"
+                loadUrl="@{viewModel.url}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:transitionName="@{viewModel.imageTransitionName}"
+                app:layout_constraintBottom_toTopOf="@id/title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/horizontal_margin"
+                android:layout_marginTop="@dimen/vertical_margin"
+                android:fontFamily="@font/roboto_bold"
+                android:text="@{viewModel.title}"
+                android:textColor="?colorOnSurface"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toTopOf="@id/explanation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageView"
+                tools:text="Starlink Satellite Trails over Brazil" />
+
+            <TextView
+                android:id="@+id/explanation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/horizontal_margin"
+                android:layout_marginTop="@dimen/vertical_content_margin"
+                android:fontFamily="@font/roboto"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="1.5dp"
+                android:text="@{viewModel.explanation}"
+                android:textColor="?colorOnSurface"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/publishedDateFlow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                tools:text="What are those streaks over the horizon? New Starlink satellites reflecting sunlight. SpaceX launched 60 Starlink communication satellites in May and 60 more in November. These satellites and thousands more are planned by communications companies in the next few years that may make streaks like these relatively common. Concern has been voiced by many in the astronomical community about how reflections from these satellites may affect future observations into space.  In the pictured composite of 33 exposures, parallel streaks from Starlink satellites are visible over southern Brazil. Sunflowers dot the foreground, while a bright meteor was caught by chance on the upper right. Satellite reflections are not new -- the constellation of 66 first-generation Iridium satellites launched starting 20 years ago produced some flares so bright that they could be seen during the day. Most of these old Iridium satellites, however, have been de-orbited over the past few years.    Infinite Loop: Create an APOD Station in your classroom or Science Center." />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/publishedDateFlow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/horizontal_margin"
+                android:layout_marginTop="@dimen/vertical_content_margin"
+                app:constraint_referenced_ids="publishedDateLabel,publishedDate"
+                app:flow_horizontalBias="0"
+                app:flow_horizontalGap="@dimen/published_date_and_copyright_horizontal_gap"
+                app:flow_horizontalStyle="packed"
+                app:flow_wrapMode="chain"
+                app:layout_constraintBottom_toTopOf="@id/copyrightFlow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/explanation"
+                app:layout_goneMarginBottom="@dimen/vertical_margin" />
+
+            <TextView
+                android:id="@+id/publishedDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/published_label"
+                android:textColor="?colorOnSurface"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/publishedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.7"
+                android:fontFamily="@font/roboto"
+                android:text="@{viewModel.publishedData}"
+                android:textColor="?colorOnSurface"
+                android:textSize="14sp"
+                tools:text="Dec 10, 2019" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/copyrightFlow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/horizontal_margin"
+                android:layout_marginBottom="@dimen/vertical_margin"
+                android:visibility="@{viewModel.copyrightVisibility}"
+                app:constraint_referenced_ids="copyrightLabel,copyrightName"
+                app:flow_horizontalBias="0"
+                app:flow_horizontalGap="@dimen/published_date_and_copyright_horizontal_gap"
+                app:flow_horizontalStyle="packed"
+                app:flow_wrapMode="chain"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/publishedDateFlow" />
+
+            <TextView
+                android:id="@+id/copyrightLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/copyright_label"
+                android:textColor="?colorOnSurface"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/copyrightName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/roboto"
+                android:text="@{viewModel.copyrightName}"
+                android:textColor="?colorOnSurface"
+                android:textSize="14sp"
+                tools:text="Egon Filter" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>
