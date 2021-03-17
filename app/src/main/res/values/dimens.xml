@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="grid_item_gap">4dp</dimen>
+    <dimen name="horizontal_margin">16dp</dimen>
+    <dimen name="vertical_margin">16dp</dimen>
+    <dimen name="vertical_content_margin">8dp</dimen>
+    <dimen name="published_date_and_copyright_horizontal_gap">8dp</dimen>
 </resources><!-- $Id$ -->

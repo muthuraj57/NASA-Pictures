@@ -2,4 +2,6 @@
     <string name="app_name">NASA Pictures</string>
 
     <string name="loading">Loading…</string>
+    <string name="published_label">Published:</string>
+    <string name="copyright_label">Image Credit &amp; Copyright:</string>
 </resources>

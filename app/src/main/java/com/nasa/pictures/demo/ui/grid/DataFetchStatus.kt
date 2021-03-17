@@ -5,8 +5,6 @@ import com.nasa.pictures.demo.model.Data
 
 /**
  * Created by Muthuraj on 17/03/21.
- *
- * Jambav, Zoho Corporation
  */
 sealed class DataFetchStatus {
     object InProgress : DataFetchStatus()

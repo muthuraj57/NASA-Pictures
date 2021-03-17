@@ -1,22 +1,27 @@
 /* $Id$ */
-package com.nasa.pictures.demo.ui.grid
+package com.nasa.pictures.demo.ui.grid.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import coil.clear
-import coil.load
 import com.nasa.pictures.demo.databinding.GridItemBinding
 import com.nasa.pictures.demo.model.Data
+import com.nasa.pictures.demo.ui.grid.GridItemViewHolder
+import com.nasa.pictures.demo.ui.grid.TransitionData
 
 /**
  * Created by Muthuraj on 17/03/21.
  */
-class GridAdapter(private val dataset: List<Data>) :
-    RecyclerView.Adapter<GridAdapter.GridItemViewHolder>() {
+class GridAdapter(
+    private val dataset: List<Data>,
+    private val onItemClicked: (clickedPosition: Int, transitionData: TransitionData) -> Unit
+) :
+    RecyclerView.Adapter<GridItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GridItemViewHolder {
-        return GridItemViewHolder(GridItemBinding.inflate(LayoutInflater.from(parent.context)))
+        val binding = GridItemBinding.inflate(LayoutInflater.from(parent.context))
+        return GridItemViewHolder(binding, onItemClicked)
     }
 
     override fun onBindViewHolder(holder: GridItemViewHolder, position: Int) {
@@ -29,16 +34,4 @@ class GridAdapter(private val dataset: List<Data>) :
     }
 
     override fun getItemCount() = dataset.size
-
-    class GridItemViewHolder(private val binding: GridItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(data: Data) {
-            binding.imageView.load(data.url)
-        }
-
-        fun onRecycled() {
-            binding.imageView.clear()
-        }
-    }
 }
