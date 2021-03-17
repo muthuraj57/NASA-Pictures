@@ -4,6 +4,8 @@ package com.nasa.pictures.demo.ui.grid
 import androidx.lifecycle.ViewModel
 import com.nasa.pictures.demo.repository.DataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -12,5 +14,11 @@ import javax.inject.Inject
 @HiltViewModel
 class GridScreenViewModel @Inject constructor(private val dataRepository: DataRepository) :
     ViewModel() {
-    suspend fun getData() = dataRepository.getData()
+
+    fun getDataFlow(): Flow<DataFetchStatus> {
+        return flow {
+            emit(DataFetchStatus.InProgress)
+            emit(DataFetchStatus.Done(dataRepository.getData()))
+        }
+    }
 }

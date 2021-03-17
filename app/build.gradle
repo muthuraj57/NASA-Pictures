@@ -63,6 +63,8 @@ dependencies {
     api "com.squareup.moshi:moshi:1.9.3"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.9.3"
 
+    implementation "io.coil-kt:coil:1.1.1"
+
 
     //             <========================== Unit Test =========================>
     testImplementation 'junit:junit:4.13.2'
