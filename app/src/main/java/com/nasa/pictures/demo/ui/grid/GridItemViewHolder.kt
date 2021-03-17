@@ -1,11 +1,7 @@
 /* $Id$ */
 package com.nasa.pictures.demo.ui.grid
 
-import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.view.marginEnd
-import androidx.core.view.marginStart
-import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import coil.clear
@@ -65,11 +61,5 @@ class HorizontalListItemViewHolder(
 
     override fun onRecycled() {
         binding.imageView.clear()
-        binding.root.scaleX = 1f
-        binding.root.scaleY = 1f
-        binding.root.updateLayoutParams<ViewGroup.LayoutParams> {
-            width =
-                binding.imageView.width + binding.imageView.marginEnd + binding.imageView.marginStart
-        }
     }
 }

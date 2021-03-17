@@ -22,8 +22,6 @@ import com.nasa.pictures.demo.model.Data
 import com.nasa.pictures.demo.ui.grid.adapter.DataAdapter
 import com.nasa.pictures.demo.ui.grid.adapter.DetailViewAdapter
 import com.nasa.pictures.demo.ui.grid.adapter.HorizontalLayoutManager
-import com.nasa.pictures.demo.util.log
-import com.nasa.pictures.demo.util.logE
 import kotlin.math.roundToInt
 
 /**
@@ -84,6 +82,7 @@ class DetailView : LinearLayout {
 
     fun setData(data: List<Data>, onIndicatorItemSelected: (position: Int) -> Unit) {
         indicatorList.adapter = DataAdapter(data, true) { clickedPosition, _ ->
+            //Open corresponding detail view for clicked indicator item.
             detailViewPager.setCurrentItem(clickedPosition, true)
         }
         detailViewPager.setAdapter(DetailViewAdapter(data))
@@ -95,15 +94,20 @@ class DetailView : LinearLayout {
     private var onIndicatorItemSelected: ((position: Int) -> Unit)? = null
 
 
+    //Listeners, item decorators should be added one time alone. This check helps with that.
     private var isSetupDone = false
+
     private fun setupListeners() {
         if (isSetupDone) {
             return
         }
         isSetupDone = true
 
+        //Max width and height the indicator item should acheive when for selected position.
         val targetHeight =
             resources.getDimensionPixelSize(R.dimen.horizontal_current_image_height)
+
+        //Extra space between each indicator items.
         val itemHorizontalMargin =
             resources.getDimensionPixelSize(R.dimen.horizontal_image_list_gap)
         val topListLayoutManager =
@@ -127,21 +131,20 @@ class DetailView : LinearLayout {
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
-                log { "onPageScrolled() called with: _position = [$_position], positionOffset = [$positionOffset], positionOffsetPixels = [$positionOffsetPixels]" }
+
+                //If offset not 0, then we should evaluate with next position (Ref: onPageScrolled
+                //method's documentation).
                 var position = if (positionOffset == 0f) _position else _position + 1
+
                 val isScrollingFromLeftToRight =
                     when (position) {
-                        previousPosition -> {
-                            log { "onPageScrolled() called with isScrollingFromLeftToRight position and previousPosition are equal" }
-                            positionOffset > previousOffset
-                        }
-                        else -> {
-                            logE { "onPageScrolled() called with isScrollingFromLeftToRight position not equal position: $position, previousPosition: $previousPosition" }
-                            position > previousPosition
-                        }
+                        previousPosition -> positionOffset > previousOffset
+                        else -> position > previousPosition
                     }
-                log { "onPageScrolled() called with isScrollingFromLeftToRight $isScrollingFromLeftToRight, previousPosition = [$previousPosition]" }
                 if (previousPosition != -1 && positionOffset != 0f && isScrollingFromLeftToRight.not()) {
+                    //When scrolling from right to left, the position we get is not the left most one.
+                    //So subtract one from position to get actual left most position where we should
+                    //scale the indicator view.
                     position--
                 }
 
@@ -150,21 +153,22 @@ class DetailView : LinearLayout {
                     val imageView = view.findViewById<ImageView>(R.id.imageView)
 
                     if (positionOffset == 0f) {
+                        //Scroll is settled and this position is the selected one. Scale and set width
+                        //with end value.
                         view.scaleX = targetHeight.toFloat() / imageView.height
                         view.scaleY = targetHeight.toFloat() / imageView.height
                         view.updateLayoutParams<ViewGroup.LayoutParams> {
                             width = targetHeight + itemHorizontalMargin
                         }
-                        this@DetailView.logE { "onPageScrolled() width reset 1 scaleX: ${view.scaleX}, ${imageView.transitionName}" }
                     } else {
+                        //Scroll in progress. Update scale factor and width by including position offset.
 
-                        //Height difference offset by current position change. Add this to current width
-                        //to give space for the scale factor.
+                        //Offset height difference by current position change for right to left scroll case.
+                        //Add this to current width to give space for the scale factor.
                         val offset =
-                            if (positionOffset != 0f && previousPosition != -1 && isScrollingFromLeftToRight.not()) {
-                                1f - positionOffset
-                            } else {
-                                positionOffset
+                            when {
+                                positionOffset != 0f && previousPosition != -1 && isScrollingFromLeftToRight.not() -> 1f - positionOffset
+                                else -> positionOffset
                             }
                         val delta = (targetHeight - imageView.height) * offset
                         view.updateLayoutParams<ViewGroup.LayoutParams> {
@@ -175,17 +179,16 @@ class DetailView : LinearLayout {
                             if (offset == 0f) targetHeight.toFloat() / imageView.height
                             else (imageView.height + (delta)) / imageView.height
                         if (scaleFactor.isFinite()) {
-                            this@DetailView.log { "onPageScrolled() called with: position = [$position], positionOffset = [$positionOffset], targetHeight = [$targetHeight], imageView.height = [${imageView.height}], scaleFactor = [$scaleFactor]" }
                             view.scaleX = scaleFactor
                             view.scaleY = scaleFactor
-                            this@DetailView.logE { "onPageScrolled() width reset 2 scaleX: ${scaleFactor}, ${imageView.transitionName}, position: $position, positionOffset: $positionOffset, previousPosition: $previousPosition, isScrollingFromLeftToRight: $isScrollingFromLeftToRight" }
                         }
                     }
                 }
 
+                //To update scale and width for adjacent views.
                 indicatorList
                     .children
-                    .filter { it != view }
+                    .filter { it != view } //Filter out current view since we already worked out for it.
                     .forEach { itemView ->
 
                         val adapterPosition =
@@ -199,17 +202,10 @@ class DetailView : LinearLayout {
                             isScrollingFromLeftToRight.not() && (adapterPosition == position + 1 || adapterPosition == position)
 
                         if (canCheckForSides && (isForLeftSideItem || isForRightSideItem)) {
-                            this@DetailView.logE { "onPageScrolled() width scale isScrollingFromLeftToRight: [$isScrollingFromLeftToRight], adapterPosition: [$adapterPosition], position: [$position]" }
-                            val offset = if (isForRightSideItem) {
-                                if (adapterPosition == position + 1) {
-                                    positionOffset
-                                } else {
-                                    positionOffset
-                                }
-                            } else {
-                                1f - positionOffset
+                            val offset = when {
+                                isForRightSideItem -> positionOffset //Offset already decreasing from 1 to 0.
+                                else -> 1f - positionOffset //Invert the offset.
                             }
-//                            val offset = 1f - positionOffset
                             val delta = (targetHeight - imageView.height) * offset
                             itemView.updateLayoutParams<ViewGroup.LayoutParams> {
                                 width = imageView.width + delta.roundToInt() + itemHorizontalMargin
@@ -220,7 +216,6 @@ class DetailView : LinearLayout {
                             if (scaleFactor.isFinite()) {
                                 itemView.scaleX = scaleFactor
                                 itemView.scaleY = scaleFactor
-                                this@DetailView.logE { "onPageScrolled() width reset 3 scaleX: ${itemView.scaleX}, ${imageView.transitionName}" }
                             }
                         } else {
                             itemView.scaleX = 1f
@@ -228,19 +223,31 @@ class DetailView : LinearLayout {
                             itemView.updateLayoutParams<ViewGroup.LayoutParams> {
                                 width = imageView.width + itemHorizontalMargin
                             }
-                            this@DetailView.logE { "onPageScrolled() width reset 4 scaleX: ${itemView.scaleX}, ${imageView.transitionName}" }
                         }
                     }
 
                 previousPosition =
                     when {
-                        previousPosition != -1 && positionOffset != 0f && isScrollingFromLeftToRight.not() -> previousPosition
+                        previousPosition != -1 && positionOffset != 0f && isScrollingFromLeftToRight.not() -> {
+                            /*
+                            * When scrolling from right to left, don't update previous position value
+                            * with current position since this value will be wrong. The position value
+                            * will be for the right most item even when scrolling towards left.
+                            * */
+                            previousPosition
+                        }
                         else -> position
                     }
                 previousOffset = positionOffset
             }
         })
 
+        //When user scrolls the indicator list, view's scale and width should be reset.
+        //And when user comes back to the current detail item's position, we should update proper
+        //scale and width for corresponding view. These are done using ItemDecoration.
+        //
+        //getItemOffsets is usually called by framework for each layout pass for all recyclerView
+        //children, which is a perfect hook to do this job.
         indicatorList.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: Rect,
@@ -248,10 +255,11 @@ class DetailView : LinearLayout {
                 parent: RecyclerView,
                 state: RecyclerView.State
             ) {
+                val imageView = view.findViewById<ImageView>(R.id.imageView)
                 if (currentVisibleDetailItemPosition != -1 &&
                     currentVisibleDetailItemPosition == parent.getChildAdapterPosition(view)
                 ) {
-                    val imageView = view.findViewById<ImageView>(R.id.imageView)
+                    //This view is the current detail view. Update full scale and width.
                     val scaleFactor = targetHeight.toFloat() / imageView.height
                     if (scaleFactor.isFinite()) {
                         view.scaleX = targetHeight.toFloat() / imageView.height
@@ -259,6 +267,13 @@ class DetailView : LinearLayout {
                     }
                     view.updateLayoutParams<ViewGroup.LayoutParams> {
                         width = targetHeight + itemHorizontalMargin
+                    }
+                } else {
+                    //Reset values.
+                    view.scaleX = 1f
+                    view.scaleY = 1f
+                    view.updateLayoutParams<ViewGroup.LayoutParams> {
+                        width = imageView.width + itemHorizontalMargin
                     }
                 }
             }
@@ -269,6 +284,11 @@ class DetailView : LinearLayout {
         .map { it.findViewById<ImageView>(R.id.imageView) }
         .toList()
 
+    /**
+     * Call this to open detail view for the particular position. This will return [OnBackPressedCallback]
+     * which should be added to the activity's back pressed dispatcher. It is used to intercept first
+     * back press action and dismiss the detail view from there.
+     * */
     fun openDetail(clickedPosition: Int): OnBackPressedCallback {
         indicatorList.scrollToPosition(clickedPosition)
         detailViewPager.setCurrentItem(clickedPosition, false)
@@ -288,7 +308,7 @@ class DetailView : LinearLayout {
             override fun handleOnBackPressed() {
                 closeDetail()
 
-                //This callbacks task is finished, remove it.
+                //This callbacks purpose is over, remove it.
                 remove()
             }
         }
@@ -310,5 +330,4 @@ class DetailView : LinearLayout {
     fun onGridViewScrolled(position: Int) {
         indicatorList.scrollToPosition(position)
     }
-
 }

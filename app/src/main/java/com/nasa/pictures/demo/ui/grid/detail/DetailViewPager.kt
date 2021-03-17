@@ -77,8 +77,6 @@ class DetailViewPager : FrameLayout {
         viewPager.setCurrentItem(position, smoothScroll)
     }
 
-    fun getCurrentItem() = viewPager.currentItem
-
     fun registerPageChangeCallback(pageChangeCallback: ViewPager2.OnPageChangeCallback) {
         viewPager.registerOnPageChangeCallback(pageChangeCallback)
     }
