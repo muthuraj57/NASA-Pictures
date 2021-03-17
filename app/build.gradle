@@ -35,7 +35,7 @@ android {
     buildFeatures {
         viewBinding true
     }
-    sourceSets.test.resources.srcDirs += ["src/main"]
+    sourceSets.test.resources.srcDirs += ["src/main/assets"]
 }
 
 ext {

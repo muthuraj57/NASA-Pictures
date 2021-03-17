@@ -9,8 +9,6 @@ import kotlinx.coroutines.test.setMain
 
 /**
  * Created by Muthuraj on 17/03/21.
- *
- * Jambav, Zoho Corporation
  */
 class TestDispatchers : DispatcherProvider {
     init {
