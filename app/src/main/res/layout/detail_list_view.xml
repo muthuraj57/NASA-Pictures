@@ -12,7 +12,8 @@
         android:id="@+id/detailViewContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/vertical_margin">
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:tag="@{viewModel.imageTransitionName}">
 
         <include
             android:id="@+id/detailView"

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.CheckResult
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
@@ -22,6 +23,7 @@ import com.nasa.pictures.demo.model.Data
 import com.nasa.pictures.demo.ui.grid.adapter.DataAdapter
 import com.nasa.pictures.demo.ui.grid.adapter.DetailViewAdapter
 import com.nasa.pictures.demo.ui.grid.adapter.HorizontalLayoutManager
+import com.nasa.pictures.demo.util.log
 import kotlin.math.roundToInt
 
 /**
@@ -280,25 +282,22 @@ class DetailView : LinearLayout {
         })
     }
 
-    fun getVisibleIndicatorImageViews() = indicatorList.children
-        .map { it.findViewById<ImageView>(R.id.imageView) }
-        .toList()
-
     /**
      * Call this to open detail view for the particular position. This will return [OnBackPressedCallback]
      * which should be added to the activity's back pressed dispatcher. It is used to intercept first
      * back press action and dismiss the detail view from there.
      * */
-    fun openDetail(clickedPosition: Int): OnBackPressedCallback {
+    @CheckResult
+    fun openDetail(clickedPosition: Int, onBackPressed: () -> Unit): OnBackPressedCallback {
         indicatorList.scrollToPosition(clickedPosition)
         detailViewPager.setCurrentItem(clickedPosition, false)
 
         visibility = View.VISIBLE
 
-        detailViewPager.translationY = -1000f
-        detailViewPager.alpha = 0f
-        detailViewPager.animate()
-            .translationY(0f)
+        indicatorList.scaleX = 0f
+        indicatorList.alpha = 0f
+        indicatorList.animate()
+            .scaleX(1f)
             .alpha(1f)
             .setInterpolator(FastOutSlowInInterpolator())
             .setDuration(500)
@@ -307,6 +306,7 @@ class DetailView : LinearLayout {
         return object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 closeDetail()
+                onBackPressed()
 
                 //This callbacks purpose is over, remove it.
                 remove()
@@ -316,18 +316,38 @@ class DetailView : LinearLayout {
 
     private fun closeDetail() {
         detailViewPager.animate()
-            .translationY(-1000f)
             .setInterpolator(FastOutSlowInInterpolator())
             .alpha(0f)
-            .setDuration(500)
+            .setDuration(400)
+            .setUpdateListener {
+                background.alpha = ((1f - it.animatedFraction) * 255).roundToInt()
+                log { "closeDetail() called ${it.animatedFraction}" }
+            }
             .withEndAction {
                 visibility = View.INVISIBLE
+//                detailViewPager.translationY = 0f
                 detailViewPager.alpha = 1f
+                background.alpha = 255
             }
+            .start()
+
+        indicatorList.scaleX = 1f
+        indicatorList.alpha = 1f
+        indicatorList.animate()
+            .scaleX(0f)
+            .alpha(0f)
+            .setInterpolator(FastOutSlowInInterpolator())
+            .setDuration(500)
             .start()
     }
 
     fun onGridViewScrolled(position: Int) {
         indicatorList.scrollToPosition(position)
     }
+
+    fun findDetailImage(transitionName: String): ImageView? {
+        return detailViewPager.findDetailImage(transitionName)
+    }
+
+    fun getCurrentItemData() = detailViewPager.getCurrentItemData()
 }

@@ -6,6 +6,9 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
+import androidx.core.view.children
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.nasa.pictures.demo.R
@@ -33,6 +36,7 @@ class DetailViewPager : FrameLayout {
         )
         this@DetailViewPager.addView(this)
     }
+    private val recyclerView = viewPager.getChildAt(0) as RecyclerView
 
     fun setAdapter(adapter: DetailViewAdapter) {
         viewPager.adapter = adapter
@@ -52,7 +56,7 @@ class DetailViewPager : FrameLayout {
                 // Next line scales the item's height. You can remove it if you don't want this effect
                 page.scaleY = 1 - (0.1f * position.absoluteValue)
                 // If you want a fading effect uncomment the next line:
-//                page.alpha = 0.25f + (1 - position.absoluteValue)
+                page.alpha = 0.45f + (1 - position.absoluteValue)
             }
 
             //Adds margin to the left and right sides of the RecyclerView item.
@@ -73,11 +77,36 @@ class DetailViewPager : FrameLayout {
         }
     }
 
+    /**
+     * Calling this with [smoothScroll] as false will invoke animation on item in [position].
+     * */
     fun setCurrentItem(position: Int, smoothScroll: Boolean) {
+        if (!smoothScroll) {
+            //If not smooth scrolling, animate the item on binding.
+            (viewPager.adapter as DetailViewAdapter).animateDetailItemForPosition = position
+
+            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+            val currentlyVisibleItemRange =
+                layoutManager.findFirstVisibleItemPosition()..layoutManager.findLastVisibleItemPosition()
+            if (viewPager.currentItem in currentlyVisibleItemRange) {
+                //View is already visible, rebind it to force the animation.
+                viewPager.adapter!!.notifyItemChanged(position)
+            }
+        }
         viewPager.setCurrentItem(position, smoothScroll)
     }
 
     fun registerPageChangeCallback(pageChangeCallback: ViewPager2.OnPageChangeCallback) {
         viewPager.registerOnPageChangeCallback(pageChangeCallback)
+    }
+
+    fun getCurrentItemData() =
+        (viewPager.adapter as DetailViewAdapter).dataset[viewPager.currentItem]
+
+    fun findDetailImage(transitionName: String): ImageView? {
+        return recyclerView
+            .children
+            .map { it.findViewById<ImageView>(R.id.imageView) }
+            .find { it.transitionName == transitionName }
     }
 }
