@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.core.view.children
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +18,7 @@ import com.nasa.pictures.demo.databinding.FragmentGridBinding
 import com.nasa.pictures.demo.model.Data
 import com.nasa.pictures.demo.ui.grid.shared.DataAdapter
 import com.nasa.pictures.demo.ui.grid.shared.SharedViewModel
+import com.nasa.pictures.demo.util.log
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -49,12 +51,19 @@ class GridFragment : Fragment(R.layout.fragment_grid) {
         binding.gridRecyclerView.visibility = View.GONE
     }
 
-    private fun onDataFetchDone(data: List<Data>) {
+    private fun onDataFetchDone(dataset: List<Data>) {
         binding.loadingText.visibility = View.GONE
         binding.gridRecyclerView.visibility = View.VISIBLE
-        binding.gridRecyclerView.adapter = DataAdapter(data, false, ::openDetailScreen)
-        binding.detailView.setData(data) { selectedIndicatorItemPosition ->
-            binding.gridRecyclerView.scrollToPosition(selectedIndicatorItemPosition)
+        binding.gridRecyclerView.adapter = DataAdapter(dataset, false) { clickedPosition ->
+            viewModel.onGridItemClicked(clickedPosition)
+        }
+        binding.detailView.setData(dataset) { selectedIndicatorItemPosition ->
+            if (binding.detailView.isVisible) {
+                //This callback will be called with value 0 for first time even when detail view is
+                //not visible. But we don't want to show first item's detail view everytime app is
+                //opened, hence this check.
+                viewModel.onGridItemClicked(selectedIndicatorItemPosition)
+            }
         }
 
         binding.gridRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -66,44 +75,65 @@ class GridFragment : Fragment(R.layout.fragment_grid) {
                 }
             }
         })
+
+        viewModel.selectedDetailItemFlow
+            .onEach { selectedItemPair ->
+                if (selectedItemPair != null) {
+                    val (selectedItemPosition, data) = selectedItemPair
+                    binding.gridRecyclerView.scrollToPosition(selectedItemPosition)
+                    openDetailScreen(selectedItemPosition, data)
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun openDetailScreen(clickedPosition: Int, data: Data) {
+        if (binding.detailView.isVisible) {
+            log { "openDetailScreen() call ignored since detail view is already opened." }
+            return
+        }
         with(binding) {
             val transitionName = data.transitionName
 
-            //Get the clicked view from grid recyclerView.
+            //Get the clicked view from grid recyclerView. This will be null on configuration changed
+            //since gridRecyclerView might not have laid out it's children when this method is called.
             val mainView = gridRecyclerView.children
                 .map { it.findViewById<ImageView>(R.id.imageView) }
-                .find { it.transitionName == transitionName }!!
+                .find { it.transitionName == transitionName }
 
-            //Get target view from detailView.
-            val endView = detailView.findDetailImage(transitionName)
-            if (endView != null) {
-                //Target view will be null for first time opening an item (or nearby item).
-                val transition = MaterialContainerTransform().apply {
-                    startView = mainView
-                    this.endView = endView
-                    addTarget(endView)
+            if (mainView != null) {
+                //Get target view from detailView.
+                val endView = detailView.findDetailImage(transitionName)
+                if (endView != null) {
+                    //Target view will be null for first time opening an item (or nearby item).
+                    val transition = MaterialContainerTransform().apply {
+                        startView = mainView
+                        this.endView = endView
+                        addTarget(endView)
+                    }
+                    TransitionManager.beginDelayedTransition(binding.constraintLayout, transition)
                 }
-                TransitionManager.beginDelayedTransition(binding.constraintLayout, transition)
             }
 
             val backPressedCallback = detailView.openDetail(clickedPosition) {
+                viewModel.onDetailItemClosed()
                 onDetailViewClosing()
             }
             requireActivity().onBackPressedDispatcher.addCallback(backPressedCallback)
         }
     }
 
+    /**
+     * Called when detail is view is closing. We set transition for image view from detail view to
+     * grid view here.
+     * */
     private fun onDetailViewClosing() {
         val transitionName = binding.detailView.getCurrentItemData().transitionName
-        val mainView = binding.detailView.findDetailImage(transitionName)!!
+        val startView = binding.detailView.findDetailImage(transitionName)!!
         val endView = binding.gridRecyclerView.children
             .map { it.findViewById<ImageView>(R.id.imageView) }
             .find { it.transitionName == transitionName }!!
         val transition = MaterialContainerTransform().apply {
-            startView = mainView
+            this.startView = startView
             this.endView = endView
             addTarget(endView)
         }

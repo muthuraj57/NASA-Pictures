@@ -20,9 +20,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.nasa.pictures.demo.R
 import com.nasa.pictures.demo.model.Data
-import com.nasa.pictures.demo.ui.grid.shared.DataAdapter
-import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPagerAdapter
 import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPager
+import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPagerAdapter
+import com.nasa.pictures.demo.ui.grid.shared.DataAdapter
 import kotlin.math.roundToInt
 
 /**
@@ -82,7 +82,7 @@ class DetailViewContainer : LinearLayout {
     }
 
     fun setData(data: List<Data>, onIndicatorItemSelected: (position: Int) -> Unit) {
-        indicatorList.adapter = DataAdapter(data, true) { clickedPosition, _ ->
+        indicatorList.adapter = DataAdapter(data, true) { clickedPosition ->
             //Open corresponding detail view for clicked indicator item.
             detailViewPager.setCurrentItem(clickedPosition, true)
         }
@@ -104,7 +104,7 @@ class DetailViewContainer : LinearLayout {
         }
         isSetupDone = true
 
-        //Max width and height the indicator item should acheive when for selected position.
+        //Max width and height the indicator item should achieve when for selected position.
         val targetHeight =
             resources.getDimensionPixelSize(R.dimen.horizontal_current_image_height)
 

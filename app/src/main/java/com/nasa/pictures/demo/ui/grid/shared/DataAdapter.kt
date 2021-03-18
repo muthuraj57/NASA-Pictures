@@ -7,9 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nasa.pictures.demo.databinding.GridItemBinding
 import com.nasa.pictures.demo.databinding.HorizontalListItemBinding
 import com.nasa.pictures.demo.model.Data
-import com.nasa.pictures.demo.ui.grid.GridItemViewHolder
-import com.nasa.pictures.demo.ui.grid.HorizontalListItemViewHolder
-import com.nasa.pictures.demo.ui.grid.ItemViewHolder
 
 /**
  * Created by Muthuraj on 17/03/21.
@@ -20,7 +17,7 @@ import com.nasa.pictures.demo.ui.grid.ItemViewHolder
 class DataAdapter(
     private val dataset: List<Data>,
     private val isForIndicatorView: Boolean,
-    private val onItemClicked: (clickedPosition: Int, data: Data) -> Unit
+    private val onItemClicked: (clickedPosition: Int) -> Unit
 ) :
     RecyclerView.Adapter<ItemViewHolder>() {
 
