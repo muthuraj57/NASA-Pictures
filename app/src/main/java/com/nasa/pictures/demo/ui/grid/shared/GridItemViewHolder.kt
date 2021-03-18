@@ -9,14 +9,13 @@ import coil.load
 import com.nasa.pictures.demo.databinding.GridItemBinding
 import com.nasa.pictures.demo.databinding.HorizontalListItemBinding
 import com.nasa.pictures.demo.model.Data
-import com.nasa.pictures.demo.util.TransitionNameSetter
 
 /**
  * Created by Muthuraj on 17/03/21.
  */
 sealed class ItemViewHolder(
     private val binding: ViewBinding,
-    private val onItemClicked: (clickedPosition: Int, transitionData: TransitionData) -> Unit
+    private val onItemClicked: (clickedPosition: Int, data: Data) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     abstract fun bind(data: Data)
@@ -24,13 +23,11 @@ sealed class ItemViewHolder(
     abstract fun onRecycled()
 
     protected fun bind(data: Data, imageView: ImageView) {
-        TransitionNameSetter.set(imageView, data)
+        imageView.transitionName = data.transitionName
         imageView.load(data.url)
         binding.root.setOnClickListener {
             if (adapterPosition != RecyclerView.NO_POSITION) {
-                val transitionData =
-                    TransitionData(imageView, data)
-                onItemClicked(adapterPosition, transitionData)
+                onItemClicked(adapterPosition, data)
             }
         }
     }
@@ -38,7 +35,7 @@ sealed class ItemViewHolder(
 
 class GridItemViewHolder(
     private val binding: GridItemBinding,
-    onItemClicked: (clickedPosition: Int, transitionData: TransitionData) -> Unit
+    onItemClicked: (clickedPosition: Int, data: Data) -> Unit
 ) : ItemViewHolder(binding, onItemClicked) {
 
     override fun bind(data: Data) {
@@ -52,7 +49,7 @@ class GridItemViewHolder(
 
 class HorizontalListItemViewHolder(
     private val binding: HorizontalListItemBinding,
-    onItemClicked: (clickedPosition: Int, transitionData: TransitionData) -> Unit
+    onItemClicked: (clickedPosition: Int, data: Data) -> Unit
 ) : ItemViewHolder(binding, onItemClicked) {
 
     override fun bind(data: Data) {

@@ -36,7 +36,7 @@
         app:spanCount="2"
         tools:listitem="@layout/grid_item" />
 
-    <com.nasa.pictures.demo.ui.grid.detail.DetailView
+    <com.nasa.pictures.demo.ui.grid.detail.DetailViewContainer
         android:id="@+id/detailView"
         android:layout_width="0dp"
         android:layout_height="0dp"

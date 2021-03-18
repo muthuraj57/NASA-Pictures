@@ -15,9 +15,8 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.nasa.pictures.demo.R
 import com.nasa.pictures.demo.databinding.FragmentGridBinding
 import com.nasa.pictures.demo.model.Data
-import com.nasa.pictures.demo.ui.grid.adapter.DataAdapter
-import com.nasa.pictures.demo.ui.grid.adapter.SharedViewModel
-import com.nasa.pictures.demo.util.TransitionNameSetter
+import com.nasa.pictures.demo.ui.grid.shared.DataAdapter
+import com.nasa.pictures.demo.ui.grid.shared.SharedViewModel
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -69,9 +68,9 @@ class GridFragment : Fragment(R.layout.fragment_grid) {
         })
     }
 
-    private fun openDetailScreen(clickedPosition: Int, transitionData: TransitionData) {
+    private fun openDetailScreen(clickedPosition: Int, data: Data) {
         with(binding) {
-            val transitionName = TransitionNameSetter.getTransitionName(transitionData.data)
+            val transitionName = data.transitionName
 
             //Get the clicked view from grid recyclerView.
             val mainView = gridRecyclerView.children
@@ -98,8 +97,7 @@ class GridFragment : Fragment(R.layout.fragment_grid) {
     }
 
     private fun onDetailViewClosing() {
-        val transitionName =
-            TransitionNameSetter.getTransitionName(binding.detailView.getCurrentItemData())
+        val transitionName = binding.detailView.getCurrentItemData().transitionName
         val mainView = binding.detailView.findDetailImage(transitionName)!!
         val endView = binding.gridRecyclerView.children
             .map { it.findViewById<ImageView>(R.id.imageView) }

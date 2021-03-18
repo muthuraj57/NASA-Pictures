@@ -1,5 +1,5 @@
 /* $Id$ */
-package com.nasa.pictures.demo.ui.grid.adapter
+package com.nasa.pictures.demo.ui.grid.shared
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,29 +10,24 @@ import com.nasa.pictures.demo.model.Data
 import com.nasa.pictures.demo.ui.grid.GridItemViewHolder
 import com.nasa.pictures.demo.ui.grid.HorizontalListItemViewHolder
 import com.nasa.pictures.demo.ui.grid.ItemViewHolder
-import com.nasa.pictures.demo.ui.grid.TransitionData
-import com.nasa.pictures.demo.util.log
-import com.nasa.pictures.demo.util.logE
 
 /**
  * Created by Muthuraj on 17/03/21.
+ *
+ * Used to populate data in both grid view and detail view.
+ * [isForIndicatorView] determines whether current view is grid view or indicator view inside detail view.
  */
 class DataAdapter(
     private val dataset: List<Data>,
-    private val isHorizontalList: Boolean,
-    private val onItemClicked: (clickedPosition: Int, transitionData: TransitionData) -> Unit
+    private val isForIndicatorView: Boolean,
+    private val onItemClicked: (clickedPosition: Int, data: Data) -> Unit
 ) :
     RecyclerView.Adapter<ItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        if (isHorizontalList) {
-            logE { "onCreateViewHolder() called with: viewType = [$viewType]" }
-        } else {
-            log { "onCreateViewHolder() called with: viewType = [$viewType]" }
-        }
         return when {
-            isHorizontalList -> {
+            isForIndicatorView -> {
                 val binding = HorizontalListItemBinding.inflate(layoutInflater)
                 HorizontalListItemViewHolder(binding, onItemClicked)
             }
@@ -44,11 +39,6 @@ class DataAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        if (isHorizontalList) {
-            logE { "onBindViewHolder() called with: position = [$position]" }
-        } else {
-            log { "onBindViewHolder() called with: position = [$position]" }
-        }
         holder.bind(dataset[position])
     }
 

@@ -1,5 +1,5 @@
 /* $Id$ */
-package com.nasa.pictures.demo.ui.grid.adapter
+package com.nasa.pictures.demo.ui.grid.shared
 
 import androidx.lifecycle.ViewModel
 import com.nasa.pictures.demo.repository.DataRepository
@@ -22,6 +22,4 @@ class SharedViewModel @Inject constructor(private val dataRepository: DataReposi
             emit(DataFetchStatus.Done(dataRepository.getData()))
         }
     }
-
-    suspend fun getData(position: Int) = dataRepository.getData()[position]
 }

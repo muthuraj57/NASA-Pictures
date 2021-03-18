@@ -1,5 +1,5 @@
 /* $Id$ */
-package com.nasa.pictures.demo.ui.grid.detail
+package com.nasa.pictures.demo.ui.grid.detail.viewPager
 
 import android.content.Context
 import android.graphics.Rect
@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.nasa.pictures.demo.R
-import com.nasa.pictures.demo.ui.grid.adapter.DetailViewAdapter
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
@@ -38,7 +37,7 @@ class DetailViewPager : FrameLayout {
     }
     private val recyclerView = viewPager.getChildAt(0) as RecyclerView
 
-    fun setAdapter(adapter: DetailViewAdapter) {
+    fun setAdapter(adapter: DetailViewPagerAdapter) {
         viewPager.adapter = adapter
 
         //To show part of previous and next item.
@@ -83,7 +82,7 @@ class DetailViewPager : FrameLayout {
     fun setCurrentItem(position: Int, smoothScroll: Boolean) {
         if (!smoothScroll) {
             //If not smooth scrolling, animate the item on binding.
-            (viewPager.adapter as DetailViewAdapter).animateDetailItemForPosition = position
+            (viewPager.adapter as DetailViewPagerAdapter).animateDetailItemForPosition = position
 
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val currentlyVisibleItemRange =
@@ -101,7 +100,7 @@ class DetailViewPager : FrameLayout {
     }
 
     fun getCurrentItemData() =
-        (viewPager.adapter as DetailViewAdapter).dataset[viewPager.currentItem]
+        (viewPager.adapter as DetailViewPagerAdapter).dataset[viewPager.currentItem]
 
     fun findDetailImage(transitionName: String): ImageView? {
         return recyclerView

@@ -1,5 +1,5 @@
 /* $Id$ */
-package com.nasa.pictures.demo.ui.grid.adapter
+package com.nasa.pictures.demo.ui.grid.detail.viewPager
 
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +14,8 @@ import com.nasa.pictures.demo.ui.grid.detail.DetailViewModel
 /**
  * Created by Muthuraj on 17/03/21.
  */
-class DetailViewAdapter(val dataset: List<Data>) :
-    RecyclerView.Adapter<DetailViewHolder>() {
+class DetailViewPagerAdapter(val dataset: List<Data>) :
+    RecyclerView.Adapter<DetailViewPagerAdapter.DetailViewHolder>() {
 
     var animateDetailItemForPosition = -1
 
@@ -66,4 +66,7 @@ class DetailViewAdapter(val dataset: List<Data>) :
     }
 
     override fun getItemCount() = dataset.size
+
+    class DetailViewHolder(val binding: DetailListViewBinding) :
+        RecyclerView.ViewHolder(binding.root)
 }

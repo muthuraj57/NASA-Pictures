@@ -16,4 +16,10 @@ data class Data(
     @field:Json(name = "hdurl")
     val hdUrl: String,
     val url: String
-)
+) {
+
+    /**
+     * Used to identify images with same data among grid view, detail view and indicator view.
+     * */
+    val transitionName = title + url
+}

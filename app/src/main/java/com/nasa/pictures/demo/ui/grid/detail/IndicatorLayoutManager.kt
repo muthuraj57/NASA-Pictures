@@ -1,5 +1,5 @@
 /* $Id$ */
-package com.nasa.pictures.demo.ui.grid.adapter
+package com.nasa.pictures.demo.ui.grid.detail
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
  * To scroll the smoothScrollPosition item in center of the screen.
  * By default, the item will be scrolled such that it will be at bottom of screen
  */
-class HorizontalLayoutManager(context: Context) : LinearLayoutManager(context, HORIZONTAL, false) {
+class IndicatorLayoutManager(context: Context) : LinearLayoutManager(context, HORIZONTAL, false) {
     override fun smoothScrollToPosition(
         recyclerView: RecyclerView,
         state: RecyclerView.State?,

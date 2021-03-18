@@ -5,7 +5,6 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import coil.load
 import com.nasa.pictures.demo.model.Data
-import com.nasa.pictures.demo.util.TransitionNameSetter
 
 /**
  * Created by Muthuraj on 17/03/21.
@@ -17,7 +16,7 @@ class DetailViewModel(data: Data) {
     val publishedData = data.date
     val copyrightName = data.copyright
     val copyrightVisibility = data.copyright != null
-    val imageTransitionName = TransitionNameSetter.getTransitionName(data)
+    val imageTransitionName = data.transitionName
 
     companion object {
         @JvmStatic

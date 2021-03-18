@@ -20,16 +20,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.nasa.pictures.demo.R
 import com.nasa.pictures.demo.model.Data
-import com.nasa.pictures.demo.ui.grid.adapter.DataAdapter
-import com.nasa.pictures.demo.ui.grid.adapter.DetailViewAdapter
-import com.nasa.pictures.demo.ui.grid.adapter.HorizontalLayoutManager
-import com.nasa.pictures.demo.util.log
+import com.nasa.pictures.demo.ui.grid.shared.DataAdapter
+import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPagerAdapter
+import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPager
 import kotlin.math.roundToInt
 
 /**
  * Created by Muthuraj on 17/03/21.
  */
-class DetailView : LinearLayout {
+class DetailViewContainer : LinearLayout {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
@@ -52,7 +51,7 @@ class DetailView : LinearLayout {
                 bottom = verticalMargin
             )
         }
-        layoutManager = HorizontalLayoutManager(context)
+        layoutManager = IndicatorLayoutManager(context)
 
         //Needed since we scale currently visible detail item from this list and that view's bounds
         //might come outside it's parent's bound.
@@ -87,7 +86,7 @@ class DetailView : LinearLayout {
             //Open corresponding detail view for clicked indicator item.
             detailViewPager.setCurrentItem(clickedPosition, true)
         }
-        detailViewPager.setAdapter(DetailViewAdapter(data))
+        detailViewPager.setAdapter(DetailViewPagerAdapter(data))
 
         this.onIndicatorItemSelected = onIndicatorItemSelected
         setupListeners()
@@ -248,8 +247,8 @@ class DetailView : LinearLayout {
         //And when user comes back to the current detail item's position, we should update proper
         //scale and width for corresponding view. These are done using ItemDecoration.
         //
-        //getItemOffsets is usually called by framework for each layout pass for all recyclerView
-        //children, which is a perfect hook to do this job.
+        //getItemOffsets is usually called for each layout pass for all recyclerView children,
+        //which is a perfect hook to do this job.
         indicatorList.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: Rect,
@@ -321,11 +320,9 @@ class DetailView : LinearLayout {
             .setDuration(400)
             .setUpdateListener {
                 background.alpha = ((1f - it.animatedFraction) * 255).roundToInt()
-                log { "closeDetail() called ${it.animatedFraction}" }
             }
             .withEndAction {
                 visibility = View.INVISIBLE
-//                detailViewPager.translationY = 0f
                 detailViewPager.alpha = 1f
                 background.alpha = 255
             }
