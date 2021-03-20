@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.nasa.pictures.demo.ui.grid.detail.DetailViewModel" />
+            type="com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView

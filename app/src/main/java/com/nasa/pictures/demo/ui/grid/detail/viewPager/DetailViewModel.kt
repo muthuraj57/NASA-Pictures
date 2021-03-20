@@ -1,5 +1,5 @@
 /* $Id$ */
-package com.nasa.pictures.demo.ui.grid.detail
+package com.nasa.pictures.demo.ui.grid.detail.viewPager
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
