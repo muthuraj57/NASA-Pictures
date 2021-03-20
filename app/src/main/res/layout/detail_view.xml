@@ -24,7 +24,8 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                loadUrl="@{viewModel.url}"
+                hdUrl="@{viewModel.hdUrl}"
+                placeHolderUrl="@{viewModel.placeHolderUrl}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
