@@ -3,6 +3,7 @@ package com.nasa.pictures.demo.repository
 import com.google.common.truth.Truth.assertThat
 import com.nasa.pictures.demo.testUtil.TestAssetFileProvider
 import com.nasa.pictures.demo.testUtil.TestDispatchers
+import com.nasa.pictures.demo.util.DateConverter
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +17,7 @@ class DataRepositoryTest {
 
     @Before
     fun setUp() {
-        dataRepository = DataRepository(TestAssetFileProvider(), TestDispatchers())
+        dataRepository = DataRepository(TestAssetFileProvider(), TestDispatchers(), DateConverter())
     }
 
     @Test

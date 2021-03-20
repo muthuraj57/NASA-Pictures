@@ -20,9 +20,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.nasa.pictures.demo.R
 import com.nasa.pictures.demo.model.Data
+import com.nasa.pictures.demo.ui.grid.common.DataAdapter
 import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPager
 import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPagerAdapter
-import com.nasa.pictures.demo.ui.grid.common.DataAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -90,12 +90,15 @@ class DetailViewContainer : LinearLayout {
     @Inject
     lateinit var dataAdapterFactory: DataAdapter.Factory
 
+    @Inject
+    lateinit var detailViewPagerAdapterFactory: DetailViewPagerAdapter.Factory
+
     fun setData(data: List<Data>, onIndicatorItemSelected: (position: Int) -> Unit) {
         indicatorList.adapter = dataAdapterFactory.create(data, true) { clickedPosition ->
             //Open corresponding detail view for clicked indicator item.
             detailViewPager.setCurrentItem(clickedPosition, true)
         }
-        detailViewPager.setAdapter(DetailViewPagerAdapter(data))
+        detailViewPager.setAdapter(detailViewPagerAdapterFactory.create(data))
 
         this.onIndicatorItemSelected = onIndicatorItemSelected
         setupListeners()

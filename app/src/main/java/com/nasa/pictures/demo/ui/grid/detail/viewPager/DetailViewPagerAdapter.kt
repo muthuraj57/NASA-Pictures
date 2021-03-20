@@ -9,11 +9,17 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.pictures.demo.databinding.DetailListViewBinding
 import com.nasa.pictures.demo.model.Data
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
 /**
  * Created by Muthuraj on 17/03/21.
  */
-class DetailViewPagerAdapter(val dataset: List<Data>) :
+class DetailViewPagerAdapter @AssistedInject constructor(
+    @Assisted val dataset: List<Data>,
+    private val detailViewModelFactor: DetailViewModel.Factory
+) :
     RecyclerView.Adapter<DetailViewPagerAdapter.DetailViewHolder>() {
 
     var animateDetailItemForPosition = -1
@@ -32,7 +38,7 @@ class DetailViewPagerAdapter(val dataset: List<Data>) :
     }
 
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
-        holder.binding.viewModel = DetailViewModel(dataset[position])
+        holder.binding.viewModel = detailViewModelFactor.create(dataset[position])
         if (animateDetailItemForPosition == position) {
             animateDetailView(holder.binding)
             animateDetailItemForPosition = -1
@@ -68,4 +74,9 @@ class DetailViewPagerAdapter(val dataset: List<Data>) :
 
     class DetailViewHolder(val binding: DetailListViewBinding) :
         RecyclerView.ViewHolder(binding.root)
+
+    @AssistedFactory
+    interface Factory {
+        fun create(dataset: List<Data>): DetailViewPagerAdapter
+    }
 }
