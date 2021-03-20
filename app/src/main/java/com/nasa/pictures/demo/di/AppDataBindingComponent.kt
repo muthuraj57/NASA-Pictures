@@ -4,6 +4,7 @@ package com.nasa.pictures.demo.di
 import androidx.databinding.DataBindingComponent
 import com.nasa.pictures.demo.util.ImageLoader
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by Muthuraj on 20/03/21.
@@ -13,6 +14,7 @@ import javax.inject.Inject
  * override those methods and provide instances for those classes so that data binding can access
  * those binding adapter methods.
  */
+@Singleton
 class AppDataBindingComponent @Inject constructor(private val imageLoader: ImageLoader) :
     DataBindingComponent {
 

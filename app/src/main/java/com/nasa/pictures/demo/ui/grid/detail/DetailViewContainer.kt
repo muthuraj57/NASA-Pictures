@@ -45,6 +45,7 @@ class DetailViewContainer : LinearLayout {
     )
 
     private val indicatorList = RecyclerView(context).apply {
+        id = R.id.indicatorView
         val height = resources.getDimensionPixelSize(R.dimen.horizontal_image_height)
         val horizontalMargin = resources.getDimensionPixelSize(R.dimen.grid_item_gap)
         val verticalMargin =

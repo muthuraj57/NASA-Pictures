@@ -46,7 +46,7 @@ class DetailViewPagerAdapter @AssistedInject constructor(
     }
 
     private fun animateDetailView(detailViewBinding: DetailListViewBinding) {
-        with(detailViewBinding.detailView) {
+        with(detailViewBinding.detailViewItem) {
             animateFromBottom(title, 0)
             animateFromBottom(explanation, 100)
             animateFromBottom(publishedDateLabel, 150)

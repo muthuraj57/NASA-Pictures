@@ -32,6 +32,7 @@ class DetailViewPager : FrameLayout {
     )
 
     private val viewPager = ViewPager2(context).apply {
+        id = R.id.detailViewPager
         layoutParams = LayoutParams(
             LayoutParams.MATCH_PARENT,
             LayoutParams.MATCH_PARENT

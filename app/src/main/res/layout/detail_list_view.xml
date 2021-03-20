@@ -16,7 +16,7 @@
         android:tag="@{viewModel.imageTransitionName}">
 
         <include
-            android:id="@+id/detailView"
+            android:id="@+id/detailViewItem"
             layout="@layout/detail_view"
             viewModel="@{viewModel}"
             android:layout_width="match_parent"
