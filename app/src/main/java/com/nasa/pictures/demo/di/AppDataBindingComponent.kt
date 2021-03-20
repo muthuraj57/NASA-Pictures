@@ -2,6 +2,7 @@
 package com.nasa.pictures.demo.di
 
 import androidx.databinding.DataBindingComponent
+import com.nasa.pictures.demo.util.ImageLoader
 import javax.inject.Inject
 
 /**

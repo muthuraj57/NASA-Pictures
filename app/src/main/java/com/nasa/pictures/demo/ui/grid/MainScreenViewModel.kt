@@ -1,11 +1,10 @@
 /* $Id$ */
-package com.nasa.pictures.demo.ui.grid.shared
+package com.nasa.pictures.demo.ui.grid
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import com.nasa.pictures.demo.repository.DataRepository
-import com.nasa.pictures.demo.ui.grid.DataFetchStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,7 +15,7 @@ import javax.inject.Inject
  * Created by Muthuraj on 17/03/21.
  */
 @HiltViewModel
-class SharedViewModel @Inject constructor(
+class MainScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val dataRepository: DataRepository
 ) : ViewModel() {

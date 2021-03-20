@@ -1,12 +1,12 @@
 /* $Id$ */
-package com.nasa.pictures.demo.ui.grid.shared
+package com.nasa.pictures.demo.ui.grid.common
 
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.nasa.pictures.demo.databinding.GridItemBinding
 import com.nasa.pictures.demo.databinding.HorizontalListItemBinding
-import com.nasa.pictures.demo.di.ImageLoader
+import com.nasa.pictures.demo.util.ImageLoader
 import com.nasa.pictures.demo.model.Data
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory

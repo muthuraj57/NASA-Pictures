@@ -1,5 +1,5 @@
 /* $Id$ */
-package com.nasa.pictures.demo.ui.grid.shared
+package com.nasa.pictures.demo.ui.grid.common
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

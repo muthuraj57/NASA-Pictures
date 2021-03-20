@@ -22,13 +22,16 @@ import com.nasa.pictures.demo.R
 import com.nasa.pictures.demo.model.Data
 import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPager
 import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPagerAdapter
-import com.nasa.pictures.demo.ui.grid.shared.DataAdapter
+import com.nasa.pictures.demo.ui.grid.common.DataAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 /**
  * Created by Muthuraj on 17/03/21.
+ *
+ * Shows detail view of all items in ViewPager style and shows the image list at bottom like page indicator.
+ * Images in indicator view will be animated based on ViewPager selected item and scrolling.
  */
 @AndroidEntryPoint
 class DetailViewContainer : LinearLayout {

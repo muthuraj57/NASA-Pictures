@@ -1,10 +1,10 @@
-package com.nasa.pictures.demo.ui
+package com.nasa.pictures.demo.ui.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.nasa.pictures.demo.databinding.ActivityMainBinding
-import com.nasa.pictures.demo.ui.grid.GridFragment
+import com.nasa.pictures.demo.ui.grid.MainFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.commit {
                 add(
                     binding.fragmentContainer.id,
-                    GridFragment(),
-                    GridFragment::class.java.simpleName
+                    MainFragment(),
+                    MainFragment::class.java.simpleName
                 )
             }
         }

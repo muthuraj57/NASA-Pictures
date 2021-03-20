@@ -1,5 +1,5 @@
 /* $Id$ */
-package com.nasa.pictures.demo.di
+package com.nasa.pictures.demo.util
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter

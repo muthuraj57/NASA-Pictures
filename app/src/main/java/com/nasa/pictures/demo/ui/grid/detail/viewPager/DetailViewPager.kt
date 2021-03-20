@@ -17,6 +17,9 @@ import kotlin.math.roundToInt
 
 /**
  * Created by Muthuraj on 17/03/21.
+ *
+ * Shows detail view with image and meta information in ViewPager style. The left and right pages
+ * will be partially visible to indicate that user can scroll to see other item's detail.
  */
 class DetailViewPager : FrameLayout {
     constructor(context: Context) : super(context)
