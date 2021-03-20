@@ -21,8 +21,18 @@ class DataRepositoryTest {
     }
 
     @Test
-    fun `getData returns valid data`() {
-        val data = runBlocking { dataRepository.getData() }
+    fun `getDataSortedByLatest returns valid data`() {
+        val data = runBlocking { dataRepository.getDataSortedByLatest() }
         assertThat(data).isNotEmpty()
+    }
+
+    @Test
+    fun `getDataSortedByLatest returns valid sorted data`() {
+        val data = runBlocking { dataRepository.getDataSortedByLatest() }
+
+        //Truth has only isInOrder method which will check if list is in ascending order.
+        //So reverse the source before proceeding with the check.
+        val dataToCheck = data.reversed()
+        assertThat(dataToCheck).isInOrder()
     }
 }

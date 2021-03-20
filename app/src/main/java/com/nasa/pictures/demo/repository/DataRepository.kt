@@ -41,11 +41,11 @@ class DataRepository @Inject constructor(
         }
     }
 
-    suspend fun getData(): List<Data> {
+    suspend fun getDataSortedByLatest(): List<Data> {
         if (dataset != null) {
             return dataset!!
         }
-        dataset = parseData()
+        dataset = parseData().sortedByDescending { it.publishedDate }
         return dataset!!
     }
 }

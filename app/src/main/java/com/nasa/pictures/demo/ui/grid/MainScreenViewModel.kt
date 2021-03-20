@@ -25,7 +25,7 @@ class MainScreenViewModel @Inject constructor(
     val selectedDetailItemFlow = selectedDetailItemPosition.asFlow()
         .map { selectedPosition ->
             when {
-                selectedPosition != -1 -> selectedPosition to dataRepository.getData()[selectedPosition]
+                selectedPosition != -1 -> selectedPosition to dataRepository.getDataSortedByLatest()[selectedPosition]
                 else -> null
             }
         }
@@ -33,7 +33,7 @@ class MainScreenViewModel @Inject constructor(
     fun getDataFlow(): Flow<DataFetchStatus> {
         return flow {
             emit(DataFetchStatus.InProgress)
-            emit(DataFetchStatus.Done(dataRepository.getData()))
+            emit(DataFetchStatus.Done(dataRepository.getDataSortedByLatest()))
         }
     }
 

@@ -13,9 +13,13 @@ data class Data(
     val explanation: String,
     val hdUrl: String,
     val url: String
-) {
+) : Comparable<Data> {
     /**
      * Used to identify images with same data among grid view, detail view and indicator view.
      * */
     val transitionName = title + url
+
+    override fun compareTo(other: Data): Int {
+        return publishedDate.compareTo(other.publishedDate)
+    }
 }
