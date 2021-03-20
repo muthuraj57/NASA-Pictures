@@ -1,9 +1,6 @@
 /* $Id$ */
 package com.nasa.pictures.demo.ui.grid.detail.viewPager
 
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
-import com.bumptech.glide.Glide
 import com.nasa.pictures.demo.model.Data
 
 /**
@@ -18,19 +15,4 @@ class DetailViewModel(data: Data) {
     val copyrightName = data.copyright
     val copyrightVisibility = data.copyright != null
     val imageTransitionName = data.transitionName
-
-    companion object {
-        @JvmStatic
-        @BindingAdapter(value = ["placeHolderUrl", "hdUrl"])
-        fun loadUrl(imageView: ImageView, placeHolderUrl: String?, hdUrl: String?) {
-            if (placeHolderUrl == null || hdUrl == null) {
-                return
-            }
-            Glide.with(imageView)
-                .load(hdUrl)
-                .timeout(60_000)
-                .thumbnail(Glide.with(imageView).load(placeHolderUrl))
-                .into(imageView)
-        }
-    }
 }

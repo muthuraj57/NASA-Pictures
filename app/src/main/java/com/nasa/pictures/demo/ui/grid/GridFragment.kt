@@ -23,6 +23,7 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 /**
  * Created by Muthuraj on 17/03/21.
@@ -32,6 +33,9 @@ class GridFragment : Fragment(R.layout.fragment_grid) {
 
     private val binding by viewBinding(FragmentGridBinding::bind)
     private val viewModel by activityViewModels<SharedViewModel>()
+
+    @Inject
+    lateinit var dataAdapterFactory: DataAdapter.Factory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,9 +58,10 @@ class GridFragment : Fragment(R.layout.fragment_grid) {
     private fun onDataFetchDone(dataset: List<Data>) {
         binding.loadingText.visibility = View.GONE
         binding.gridRecyclerView.visibility = View.VISIBLE
-        binding.gridRecyclerView.adapter = DataAdapter(dataset, false) { clickedPosition ->
-            viewModel.onGridItemClicked(clickedPosition)
-        }
+        binding.gridRecyclerView.adapter =
+            dataAdapterFactory.create(dataset, false) { clickedPosition ->
+                viewModel.onGridItemClicked(clickedPosition)
+            }
         binding.detailView.setData(dataset) { selectedIndicatorItemPosition ->
             if (binding.detailView.isVisible) {
                 //This callback will be called with value 0 for first time even when detail view is

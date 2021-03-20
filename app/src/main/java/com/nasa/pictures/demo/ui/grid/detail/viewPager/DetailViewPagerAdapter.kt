@@ -9,7 +9,6 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.pictures.demo.databinding.DetailListViewBinding
 import com.nasa.pictures.demo.model.Data
-import com.nasa.pictures.demo.ui.grid.detail.DetailViewModel
 
 /**
  * Created by Muthuraj on 17/03/21.

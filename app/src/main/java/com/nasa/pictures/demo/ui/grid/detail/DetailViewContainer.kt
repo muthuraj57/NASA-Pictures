@@ -23,11 +23,14 @@ import com.nasa.pictures.demo.model.Data
 import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPager
 import com.nasa.pictures.demo.ui.grid.detail.viewPager.DetailViewPagerAdapter
 import com.nasa.pictures.demo.ui.grid.shared.DataAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
 /**
  * Created by Muthuraj on 17/03/21.
  */
+@AndroidEntryPoint
 class DetailViewContainer : LinearLayout {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -81,8 +84,11 @@ class DetailViewContainer : LinearLayout {
         clipChildren = false
     }
 
+    @Inject
+    lateinit var dataAdapterFactory: DataAdapter.Factory
+
     fun setData(data: List<Data>, onIndicatorItemSelected: (position: Int) -> Unit) {
-        indicatorList.adapter = DataAdapter(data, true) { clickedPosition ->
+        indicatorList.adapter = dataAdapterFactory.create(data, true) { clickedPosition ->
             //Open corresponding detail view for clicked indicator item.
             detailViewPager.setCurrentItem(clickedPosition, true)
         }

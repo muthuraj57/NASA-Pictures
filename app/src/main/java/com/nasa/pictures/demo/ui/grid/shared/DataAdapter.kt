@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nasa.pictures.demo.databinding.GridItemBinding
 import com.nasa.pictures.demo.databinding.HorizontalListItemBinding
 import com.nasa.pictures.demo.model.Data
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
 /**
  * Created by Muthuraj on 17/03/21.
@@ -14,10 +17,12 @@ import com.nasa.pictures.demo.model.Data
  * Used to populate data in both grid view and detail view.
  * [isForIndicatorView] determines whether current view is grid view or indicator view inside detail view.
  */
-class DataAdapter(
-    private val dataset: List<Data>,
-    private val isForIndicatorView: Boolean,
-    private val onItemClicked: (clickedPosition: Int) -> Unit
+class DataAdapter @AssistedInject constructor(
+    @Assisted private val dataset: List<Data>,
+    @Assisted private val isForIndicatorView: Boolean,
+    private val gridItemViewHolderFactory: GridItemViewHolder.Factory,
+    private val horizontalListItemViewHolderFactory: HorizontalListItemViewHolder.Factory,
+    @Assisted private val onItemClicked: (clickedPosition: Int) -> Unit
 ) :
     RecyclerView.Adapter<ItemViewHolder>() {
 
@@ -26,11 +31,11 @@ class DataAdapter(
         return when {
             isForIndicatorView -> {
                 val binding = HorizontalListItemBinding.inflate(layoutInflater)
-                HorizontalListItemViewHolder(binding, onItemClicked)
+                horizontalListItemViewHolderFactory.create(binding, onItemClicked)
             }
             else -> {
                 val binding = GridItemBinding.inflate(LayoutInflater.from(parent.context))
-                GridItemViewHolder(binding, onItemClicked)
+                gridItemViewHolderFactory.create(binding, onItemClicked)
             }
         }
     }
@@ -39,10 +44,14 @@ class DataAdapter(
         holder.bind(dataset[position])
     }
 
-    override fun onViewRecycled(holder: ItemViewHolder) {
-        super.onViewRecycled(holder)
-        holder.onRecycled()
-    }
-
     override fun getItemCount() = dataset.size
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            dataset: List<Data>,
+            isForIndicatorView: Boolean,
+            onItemClicked: (clickedPosition: Int) -> Unit
+        ): DataAdapter
+    }
 }
