@@ -4,4 +4,5 @@
     <string name="loading">Loading…</string>
     <string name="published_label">Published:</string>
     <string name="copyright_label">Image Credit &amp; Copyright:</string>
+    <string name="image_load_failed_retry">Couldn\'t load image.\nTap to retry.</string>
 </resources>

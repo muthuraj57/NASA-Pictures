@@ -1,9 +1,14 @@
 /* $Id$ */
 package com.nasa.pictures.demo.util
 
+import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,11 +36,42 @@ class ImageLoader @Inject constructor() {
             .into(imageView)
     }
 
-    fun load(imageView: ImageView, url: String) {
+    fun load(imageView: ImageView, url: String, callback: Callback?) {
         Glide.with(imageView)
             .load(url)
             .timeout(TIMEOUT)
+            .apply {
+                if (callback != null) {
+                    listener(object : RequestListener<Drawable?> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable?>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            callback.onImageLoadFailed()
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable?>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            callback.onImageLoadSuccess()
+                            return false
+                        }
+                    })
+                }
+            }
             .into(imageView)
+    }
+
+    interface Callback {
+        fun onImageLoadSuccess()
+        fun onImageLoadFailed()
     }
 
     companion object {
