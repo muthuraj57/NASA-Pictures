@@ -38,6 +38,9 @@ class DetailViewPager : FrameLayout {
         )
         this@DetailViewPager.addView(this)
     }
+
+    //This is internally used by viewPager. We need to access it sometimes, so hold the reference as
+    //member variable for ease of access.
     private val recyclerView = viewPager.getChildAt(0) as RecyclerView
 
     fun setAdapter(adapter: DetailViewPagerAdapter) {
@@ -55,9 +58,9 @@ class DetailViewPager : FrameLayout {
             val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
             setPageTransformer { page, position ->
                 page.translationX = -pageTranslationX * position
-                // Next line scales the item's height. You can remove it if you don't want this effect
+                // Next line scales the item's height
                 page.scaleY = 1 - (0.1f * position.absoluteValue)
-                // If you want a fading effect uncomment the next line:
+                // For fading effect.
                 page.alpha = 0.45f + (1 - position.absoluteValue)
             }
 
@@ -85,7 +88,7 @@ class DetailViewPager : FrameLayout {
     fun setCurrentItem(position: Int, smoothScroll: Boolean) {
         if (!smoothScroll) {
             //If not smooth scrolling, animate the item on binding.
-            (viewPager.adapter as DetailViewPagerAdapter).animateDetailItemForPosition = position
+            (viewPager.adapter as DetailViewPagerAdapter).detailItemAnimatePosition = position
 
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val currentlyVisibleItemRange =

@@ -22,7 +22,7 @@ class DetailViewPagerAdapter @AssistedInject constructor(
 ) :
     RecyclerView.Adapter<DetailViewPagerAdapter.DetailViewHolder>() {
 
-    var animateDetailItemForPosition = -1
+    var detailItemAnimatePosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailViewHolder {
 
@@ -39,9 +39,9 @@ class DetailViewPagerAdapter @AssistedInject constructor(
 
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
         holder.binding.viewModel = detailViewModelFactor.create(dataset[position])
-        if (animateDetailItemForPosition == position) {
+        if (detailItemAnimatePosition == position) {
             animateDetailView(holder.binding)
-            animateDetailItemForPosition = -1
+            detailItemAnimatePosition = -1
         }
     }
 
